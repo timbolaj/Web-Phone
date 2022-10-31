@@ -1,0 +1,13 @@
+:host {
+    height: 100vh;
+    width: 100vw;
+
+  .forms {
+    padding-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    width: 35%;
+    justify-content: space-evenly;
+    margin-left: 30%;
+  }
+}
