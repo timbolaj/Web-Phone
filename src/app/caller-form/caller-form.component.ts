@@ -54,10 +54,11 @@ export class CallerFormComponent implements OnInit {
 
     this.peer.on('call', (call: any) => {
       const remoteCamVideo = document.getElementById('remoteVideo') as HTMLVideoElement;
-      console.log(call, call.remoteStream)
-      remoteCamVideo.srcObject = call.remoteStream;
 
       call.answer(this.myStream);
+      call.on('stream', (remoteStream: any) => {
+        remoteCamVideo.srcObject = remoteStream;
+      })
     });
 
     this.peer.on('error', console.error)
