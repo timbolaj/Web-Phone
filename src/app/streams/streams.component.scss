@@ -1,5 +1,30 @@
 :host {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
+  background-color: grey;
+
+  .remote-stream {
+    display: none;
+
+    video {
+      width: 90%;
+    }
+  }
+
+  .remote-stream.-has-stream {
+    display: flex;
+    justify-content: center;
+  }
+
+  .my-stream {
+    display: flex;
+    justify-content: center;
+  }
+
+  .my-stream.-remote-view video {
+    width: 25%;
+  }
 }

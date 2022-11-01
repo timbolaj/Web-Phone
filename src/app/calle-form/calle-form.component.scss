@@ -4,8 +4,11 @@
     justify-content: space-between;
 
     button {
-      padding: 1.25rem;
       width: 31.25%;
+    }
+
+    textarea {
+      resize: none;
     }
   }
 }

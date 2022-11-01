@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import Peer from 'peerjs';
 import { Subject, takeUntil } from 'rxjs';
-import { setMyStream, setRemoteStream } from '../store/app.actions';
+import { setRemoteStream } from '../store/app.actions';
 import { fetchMyStream } from '../store/app.reducer';
 
 @Component({
@@ -11,9 +11,10 @@ import { fetchMyStream } from '../store/app.reducer';
   styleUrls: ['./caller-form.component.scss']
 })
 export class CallerFormComponent implements OnInit {
-  callId: any;
-  peer: any;
-  myStream: any;
+  callId: string | null = null;
+  peer: Peer | null = null;
+  myStream: MediaStream | null = null;
+  generating: boolean | null = null;
 
   private destroy$ = new Subject();
 
@@ -22,18 +23,6 @@ export class CallerFormComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const webcamVideo = document.getElementById('webcamVideo') as HTMLVideoElement;
-
-    navigator.mediaDevices.getUserMedia({ video: true, audio: false })
-      .then((myStream) => {
-        this.store.dispatch(setMyStream({ myStream }))
-        webcamVideo.srcObject = myStream;
-      })
-      .catch((err) => {
-        alert('There was an error');
-        console.error(err)
-      });
-
     this.store.select(fetchMyStream).pipe(
       takeUntil(this.destroy$)
     ).subscribe((myStream: any) => {
@@ -42,25 +31,34 @@ export class CallerFormComponent implements OnInit {
   }
 
   startCall(): void {
+    this.generating = true;
+
     this.peer = new Peer({
       config: {'iceServers': [
         { url: 'stun:stun.l.google.com:19302' },
       ]},
+      debug: 1
     });
 
     this.peer.on('open', (id: string) => {
       this.callId = id;
+      this.generating = false;
     });
 
     this.peer.on('call', (call: any) => {
-      const remoteCamVideo = document.getElementById('remoteVideo') as HTMLVideoElement;
-
       call.answer(this.myStream);
       call.on('stream', (remoteStream: any) => {
-        remoteCamVideo.srcObject = remoteStream;
-      })
+        this.store.dispatch(setRemoteStream({ remoteStream }));
+      });
     });
 
     this.peer.on('error', console.error)
+  }
+
+  copyCallId(): void {
+    if (this.callId) {
+      navigator.clipboard.writeText(this.callId);
+      alert(`${this.callId} has been copied to clipboard`);
+    }
   }
 }

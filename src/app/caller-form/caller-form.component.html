@@ -1,4 +1,6 @@
 <div class="caller-form">
   <button (click)="startCall()">Generate Id</button>
-  <p>Call Id is: {{ callId }}</p>
+  <p *ngIf="!callId && !generating">Generate a call id</p>
+  <p *ngIf="generating">Generating...</p>
+  <p *ngIf="callId"><a (click)="copyCallId()">Click to add call id to clipboard</a></p>
 </div>

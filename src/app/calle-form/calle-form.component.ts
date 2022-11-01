@@ -12,7 +12,7 @@ import { fetchMyStream } from '../store/app.reducer';
   styleUrls: ['./calle-form.component.scss']
 })
 export class CalleFormComponent implements OnInit, OnDestroy {
-  peer: any = null;
+  peer: Peer | null = null;
   myStream: any;
 
   private destroy$ = new Subject();
@@ -38,19 +38,17 @@ export class CalleFormComponent implements OnInit, OnDestroy {
       config: {'iceServers': [
         { url: 'stun:stun.l.google.com:19302' },
       ]},
+      debug: 1
     });
 
     this.peer.on('open', () => {
       // Call peer on that id
       const callId = document.getElementById("call-field") as HTMLInputElement;
-      const call = this.peer.call(callId.value, this.myStream);
+      const call = this.peer?.call(callId.value, this.myStream);
 
       // Handle peer answer
-      call.on('stream', (remoteStream: any) => {
-        console.log('on stream', remoteStream)
-        const remoteCamVideo = document.getElementById('remoteVideo') as HTMLVideoElement;
+      call?.on('stream', (remoteStream: any) => {
         this.store.dispatch(setRemoteStream({ remoteStream }));
-        remoteCamVideo.srcObject = remoteStream;
       });
     });
 
