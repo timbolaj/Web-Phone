@@ -6,6 +6,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Getting Started
 * Run `npm i` to install all dependencies
+* Run `ng serve`, view the app in `localhost:4200` (default port)
 
 ## Creating a Video Call
 * Have user 1 generate a call id. Copy and send that id to user 2
