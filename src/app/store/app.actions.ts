@@ -10,7 +10,7 @@ export const setRemoteStream = createAction(
   props<{ remoteStream: MediaStream }>()
 );
 
-export const setPeerConnection = createAction(
-  '[Stream] Set Peer Connection',
-  props<{ peerConnection: any }>()
+export const setCallStatus = createAction(
+  '[Stream] End streaming',
+  props<{ callStatus: boolean }>()
 );

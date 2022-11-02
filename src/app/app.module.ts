@@ -7,6 +7,7 @@ import { appReducer } from './store/app.reducer';
 import { StreamsComponent } from './streams/streams.component';
 import { CallerFormComponent } from './caller-form/caller-form.component';
 import { CalleFormComponent } from './calle-form/calle-form.component';
+import { EndCallComponent } from './end-call/end-call.component';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import { CalleFormComponent } from './calle-form/calle-form.component';
     StreamsComponent,
     CallerFormComponent,
     CalleFormComponent,
+    EndCallComponent,
   ],
   imports: [
     StoreModule.forRoot({ appState: appReducer }),

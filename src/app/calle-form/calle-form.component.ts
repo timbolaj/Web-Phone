@@ -3,8 +3,8 @@ import { Store } from '@ngrx/store';
 import Peer from 'peerjs';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { setRemoteStream } from '../store/app.actions';
-import { fetchMyStream } from '../store/app.reducer';
+import { setCallStatus, setRemoteStream } from '../store/app.actions';
+import { fetchCallStatus, fetchMyStream } from '../store/app.reducer';
 
 @Component({
   selector: 'callee-form',
@@ -14,6 +14,7 @@ import { fetchMyStream } from '../store/app.reducer';
 export class CalleFormComponent implements OnInit, OnDestroy {
   peer: Peer | null = null;
   myStream: any;
+  call: any;
 
   private destroy$ = new Subject();
 
@@ -26,6 +27,14 @@ export class CalleFormComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe((myStream: any) => {
       this.myStream = myStream;
+    });
+
+    this.store.select(fetchCallStatus).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((callStatus: boolean) => {
+      if (this.peer?.id && !!this.call && !callStatus) {
+        this.call.close();
+      }
     });
   }
 
@@ -45,13 +54,20 @@ export class CalleFormComponent implements OnInit, OnDestroy {
       // Call peer on that id
       const callId = document.getElementById("call-field") as HTMLInputElement;
       const call = this.peer?.call(callId.value, this.myStream);
-
+      this.call = call;
       // Handle peer answer
       call?.on('stream', (remoteStream: any) => {
+        this.store.dispatch(setCallStatus({ callStatus: true }));
         this.store.dispatch(setRemoteStream({ remoteStream }));
       });
     });
 
     this.peer.on('error', console.error)
+  }
+
+  endCall(): void {
+    if (this.peer?.id) {
+      this.peer?.emit('close');
+    }
   }
 }

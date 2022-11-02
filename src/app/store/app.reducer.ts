@@ -1,17 +1,16 @@
-import { state } from '@angular/animations';
 import { Action, createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
-import { setMyStream, setRemoteStream, setPeerConnection } from './app.actions';
+import { setCallStatus, setMyStream, setRemoteStream } from './app.actions';
 
 interface appState {
   myStream: MediaStream;
   remoteStream: MediaStream;
-  peerConnection: any;
+  callStatus: boolean;
 };
 
 export const initialState = {
   myStream: {},
   remoteStream: {},
-  peerConnection: {},
+  callStatus: false,
 };
 
 const _appReducer = createReducer(
@@ -31,10 +30,10 @@ const _appReducer = createReducer(
     }
   }),
 
-  on(setPeerConnection, (state, { peerConnection }) => {
+  on(setCallStatus, (state, { callStatus }) => {
     return {
       ...state,
-      peerConnection,
+      callStatus,
     }
   }),
 );
@@ -47,3 +46,4 @@ const appSelector = createFeatureSelector<appState>('appState');
 
 export const fetchMyStream = createSelector(appSelector, (state) => state?.myStream);
 export const fetchRemoteStream = createSelector(appSelector, (state) => state?.remoteStream);
+export const fetchCallStatus = createSelector(appSelector, (state) => state.callStatus);
