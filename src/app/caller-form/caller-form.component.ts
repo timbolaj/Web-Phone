@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import Peer from 'peerjs';
 import { Subject, takeUntil } from 'rxjs';
-import { setCallStatus, setRemoteStream } from '../store/app.actions';
-import { fetchCallStatus, fetchMyStream } from '../store/app.reducer';
+import { setCallStatus, setMyStream, setRemoteStream } from '../store/app.actions';
+import { fetchCallStatus, fetchMyStream, fetchRemoteStream } from '../store/app.reducer';
 
 @Component({
   selector: 'caller-form',
@@ -34,7 +34,7 @@ export class CallerFormComponent implements OnInit {
       takeUntil(this.destroy$)
     ).subscribe((callStatus: boolean) => {
       if (this.peer?.id && !!this.call && !callStatus) {
-        this.call.close();
+        this.endCall();
       }
     });
   }
@@ -55,11 +55,18 @@ export class CallerFormComponent implements OnInit {
     });
 
     this.peer.on('call', (call: any) => {
+      // Answer incoming call
       this.call = call;
       call.answer(this.myStream);
+      // Handle incoming call
       call.on('stream', (remoteStream: any) => {
         this.store.dispatch(setCallStatus({ callStatus: true }));
         this.store.dispatch(setRemoteStream({ remoteStream }));
+      });
+
+      // known bug with peerjs means that this currently does not work
+      call?.on('close', () => {
+        alert('Call ended');
       });
     });
 
@@ -74,8 +81,13 @@ export class CallerFormComponent implements OnInit {
   }
 
   endCall(): void {
-    if (this.peer?.id) {
-      this.peer?.emit('close');
-    }
+    this.call.close();
+    this.resetState();
+  }
+
+  resetState(): void {
+    this.store.dispatch(setRemoteStream({ remoteStream: {} as MediaStream }));
+    this.store.dispatch(setCallStatus({ callStatus: false }));
+    this.callId = this.peer = null;
   }
 }

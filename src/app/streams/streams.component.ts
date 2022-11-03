@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { fetchRemoteStream } from '../store/app.reducer';
+import { fetchCallStatus, fetchRemoteStream } from '../store/app.reducer';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { setMyStream } from '../store/app.actions';
@@ -42,6 +42,8 @@ export class StreamsComponent implements OnInit, OnDestroy {
       if (remoteStream.id) {
         remoteCamVideo.srcObject = remoteStream;
         this.hasRemoteStream = true;
+      } else {
+        this.hasRemoteStream = false;
       }
     });
   }

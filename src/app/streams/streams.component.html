@@ -1,10 +1,12 @@
-<div class="remote-stream" [class.-has-stream]="hasRemoteStream">
-  <video id="remoteVideo" autoplay playsinline></video>
-  <br>
-</div>
+<div class="streams">
+  <div class="remote-stream" [class.-has-stream]="hasRemoteStream">
+    <video id="remoteVideo" autoplay playsinline></video>
+    <br>
+  </div>
 
-<br *ngIf="hasRemoteStream">
+  <br *ngIf="hasRemoteStream">
 
-<div class="my-stream" [class.-remote-view]="hasRemoteStream">
-  <video id="webcamVideo" autoplay playsinline></video>
+  <div class="my-stream" [class.-remote-view]="hasRemoteStream">
+    <video id="webcamVideo" autoplay playsinline></video>
+  </div>
 </div>
