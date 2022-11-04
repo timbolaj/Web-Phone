@@ -1,4 +1,4 @@
-# WebPhone (WIP)
+# WebPhone
 
 An Angular web app that allows two users to engage in a video call using WebRTC protocol.
 
@@ -18,3 +18,6 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 * Angular
 * NgRx
 * RxJS
+
+## Known bugs
+* To close a call, both users must click the End call button. See https://github.com/peers/peerjs/issues/636
