@@ -24,7 +24,7 @@ export class StreamsComponent implements OnInit, OnDestroy {
     const remoteCamVideo = document.getElementById('remoteVideo') as HTMLVideoElement;
 
     // Get and display local stream
-    navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
       .then((myStream) => {
         this.store.dispatch(setMyStream({ myStream }));
         webcamVideo.srcObject = myStream;
